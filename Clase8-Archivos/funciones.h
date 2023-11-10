@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#define ERROR_ARCH -1
 typedef struct{
     char nombre[50];
     char apellido[50];
