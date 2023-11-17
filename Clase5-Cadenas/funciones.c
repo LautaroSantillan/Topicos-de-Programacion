@@ -5,7 +5,7 @@ char* mi_Strcpy(char *dest, const char *orig)
     char *aux = dest;
     while(*orig)//while(*orig!='\0')
     {
-        *dest-*orig;
+        *dest=*orig;
         orig++;
         dest++;
     }
