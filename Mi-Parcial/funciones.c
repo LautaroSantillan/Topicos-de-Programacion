@@ -66,7 +66,145 @@ char *str_tit(char *s)
             } else
                 *s = to_lower(*s);
         }
-        *s++;
+        s++;
     }
     return s;
+}
+
+int generarProductos()
+{
+    FILE *pf = fopen("productos.dat","wb");
+    if(!pf)
+    {
+        printf("Error al abrir el archivo de productos\n");
+        return ERROR;
+    }
+    Producto prod[CANT_PROD]={
+                    {"AB1", "marTillo", 10},
+                    {"AB2", "clAvO", 20},
+                    {"AB3", "DesTOrniLlador", 5}
+    };
+    fwrite(&prod, sizeof(Producto), CANT_PROD, pf);
+    fclose(pf);
+    return TODO_OK;
+}
+
+int actualizarArchProd()
+{
+    FILE *pf = fopen("productos.dat", "rw");
+    if(!pf)
+    {
+        printf("Error al abrir el archivo de productos\n");
+        return ERROR;
+    }
+    Producto prod;
+    fread(&prod, sizeof(Producto), 1, pf);
+    while(!feof(pf))
+    {
+        str_rev(prod.clave);
+        str_tit(prod.desc);
+        printf("%s - %s - %d\n", prod.clave, prod.desc, prod.stock);
+        //fseek(pf, (long)(-1*sizeof(Producto)), SEEK_CUR);
+        //fwrite(&prod, sizeof(Producto), 1, pf);
+        //fseek(pf, 0L, SEEK_CUR);
+        fread(&prod, sizeof(Producto), 1, pf);
+    }
+    fclose(pf);
+    return TODO_OK;
+}
+
+int generarStock()
+{
+    FILE *pf = fopen("stock.txt", "w");
+    if(!pf)
+    {
+        printf("Error al abrir el archivo de stocks\n");
+        return ERROR;
+    }
+    Stock st[CANT_STOCK]={ ///1BA 2BA 3BA
+                {"1BA", 15},
+                {"3BA", -5},
+                {"2BA", 5},
+                {"1BA", -6},
+                {"2BA", 8},
+                {"3BA", 11}
+    };
+    burbujeo(st, CANT_STOCK);
+    for(int i = 0; i < CANT_STOCK; i++)
+        fprintf(pf, "%s|%d\n", st[i].clave, st[i].stock);
+    fclose(pf);
+    return TODO_OK;
+}
+
+void burbujeo(Stock st[], int ce)
+{
+    int i, j;
+    for(i = 0; i < ce; i++)
+    {
+        for(j = 0; j < ce - i - 1; j++)
+        {
+            if (strcmp(st[j].clave, st[j + 1].clave) > 0)
+            {
+                Stock temp = st[j];
+                st[j] = st[j + 1];
+                st[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int actualizarStock()
+{
+    FILE *pf = fopen("productos.dat", "w");
+    if(!pf)
+    {
+        printf("Error al abrir el archivo de productos\n");
+        return ERROR;
+    }
+    FILE *sf = fopen("stock.txt", "r");
+    if(!sf)
+    {
+        printf("Error al abrir el archivo de stocks\n");
+        return ERROR;
+    }
+    Producto prod;
+    char stClave[11];
+    int stStock;
+    while (fscanf(sf, "%s|%d\n", stClave, &stStock) == 2)
+    {
+        fseek(pf, 0L, SEEK_SET);
+        fread(&prod, sizeof(Producto), 1, pf);
+        while(!feof(pf))
+        {
+            if(strcmp(prod.clave, stClave)==0)
+            {
+                prod.stock = stStock;
+                fseek(pf, (long)(-1*sizeof(Producto)), SEEK_CUR);
+                fwrite(&prod, sizeof(Producto), 1, pf);
+            }
+            fread(&prod, sizeof(Producto), 1, pf);
+        }
+    }
+    fclose(pf);
+    fclose(sf);
+    return TODO_OK;
+}
+
+int mostrarArchivoProd()
+{
+    FILE *pf = fopen("productos.dat", "r");
+    if(!pf)
+    {
+        printf("Error al abrir el archivo de productos\n");
+        return ERROR;
+    }
+    Producto prod;
+    fread(&prod, sizeof(Producto), 1, pf);
+    while(!feof(pf))
+    {
+        printf("%s - %s - %d\n", prod.clave, prod.desc, prod.stock);
+        fread(&prod, sizeof(Producto), 1, pf);
+    }
+    fclose(pf);
+    return TODO_OK;
 }
