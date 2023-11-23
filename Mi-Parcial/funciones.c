@@ -141,13 +141,13 @@ void burbujeo(Stock st[], int ce)
     int i, j;
     for(i = 0; i < ce; i++)
     {
-        for(j = 0; j < ce - i - 1; j++)
+        for(j = i + 1; j < ce - i - 1; j++)
         {
-            if (strcmp(st[j].clave, st[j + 1].clave) > 0)
+            if (strcmp(st[i].clave, st[j].clave) > 0)
             {
-                Stock temp = st[j];
-                st[j] = st[j + 1];
-                st[j + 1] = temp;
+                Stock temp = st[i];
+                st[i] = st[j];
+                st[j] = temp;
             }
         }
     }
