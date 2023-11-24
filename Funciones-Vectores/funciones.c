@@ -89,3 +89,74 @@ void insercion(int *v, int ce)
         v[j+1] = indice;
     }
 }
+
+size_t mi_Strlen(const char *cad)
+{
+  size_t cant = 0;
+  while(*cad++)
+    cant++;
+  return cant;
+}
+
+char* mi_Strcpy(char *dest, const char *orig)
+{
+  char *aux = dest;
+  while(*orig)
+  {
+    *dest=*orig;
+    dest++;
+    orig++;
+  }
+  *dest='\0';
+  return aux;
+}
+
+char to_lower(char c)
+{
+  if(c >= 'A' && c <= 'Z')
+    return c + 32;
+}
+
+char to_upper(char c)
+{
+  if(c >= 'a' && c <= 'z')
+    return c - 32;
+}
+
+char* str_tit(char s)
+{
+  int capitalize = 1;
+  while(*s)
+  {
+    if(isspace(*s) || *s == '\t')
+      capitalize = 1;
+    if(capitalize)
+    {
+      *s = to_upper(*s);
+      capitalize = 0;
+    } else
+      *s = to_lower(*s);
+    s++;
+  }
+  return s;
+}
+
+char* str_rev(char s)
+{
+  int ce = mi_Strlen(s);
+  char *inicio = s;
+  char *fin = s + ce - 1;
+  while(inicio < fin)
+  {
+    char aux = *inicio;
+    *inicio = *fin;
+    *fin = aux;
+    inicio++;
+    fin--;
+  }
+  return s; 
+}
+
+void trozar(char *linea, Estudiante *reg) {
+    sscanf(linea, "%d|%[^|]|%[^|]|%f", &reg->DNI, reg->apellido, reg->nombre, &reg->promedio);
+}
