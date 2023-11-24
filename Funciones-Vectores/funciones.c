@@ -160,3 +160,45 @@ char* str_rev(char s)
 void trozar(char *linea, Estudiante *reg) {
     sscanf(linea, "%d|%[^|]|%[^|]|%f", &reg->DNI, reg->apellido, reg->nombre, &reg->promedio);
 }
+
+int mi_Strcmp(const char *str1, const char *str2) 
+{
+    while (*str1 && (*str1 == *str2)) 
+    {
+        str1++;
+        str2++;
+    }
+    return *(const unsigned char *)str1 - *(const unsigned char *)str2;
+}
+
+char *mi_Strchr(const char *str, int character) 
+{
+    while (*str != '\0') 
+    {
+        if (*str == (char)character)
+            return (char *)str;
+        str++;
+    }
+    return NULL;
+}
+
+void modificarTexto(char *texto) 
+{
+    char *start = texto;
+    char *end = texto + strlen(texto) - 1;
+    // Avanzar el inicio hasta encontrar el primer carácter que no sea un espacio
+    while (*start == ' ')
+        start++;
+    // Retroceder el final hasta encontrar el último carácter que no sea un espacio
+    while (end > start && *end == ' ')
+        end--;
+    // Mover los caracteres no espaciales hacia el inicio del texto
+    char *current = start;
+    while (start <= end) 
+    {
+        if (*start == ' ' && *(start + 1) == ' ')
+            start++;
+        *current++ = *start++;
+    }
+    *current = '\0'; // Terminar la cadena
+}
