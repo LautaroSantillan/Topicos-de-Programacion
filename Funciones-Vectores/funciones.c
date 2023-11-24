@@ -182,10 +182,10 @@ char *mi_Strchr(const char *str, int character)
     return NULL;
 }
 
-void modificarTexto(char *texto) 
+char* modificarTexto(char *texto)
 {
     char *start = texto;
-    char *end = texto + strlen(texto) - 1;
+    char *end = texto + mi_Strlen(texto) - 1;
     // Avanzar el inicio hasta encontrar el primer carácter que no sea un espacio
     while (*start == ' ')
         start++;
@@ -194,11 +194,13 @@ void modificarTexto(char *texto)
         end--;
     // Mover los caracteres no espaciales hacia el inicio del texto
     char *current = start;
-    while (start <= end) 
+    char *aux = start;
+    while (start <= end)
     {
         if (*start == ' ' && *(start + 1) == ' ')
             start++;
         *current++ = *start++;
     }
     *current = '\0'; // Terminar la cadena
+    return aux;
 }
