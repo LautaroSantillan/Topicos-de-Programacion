@@ -32,6 +32,7 @@ int generacion_archivo()
                 {12384215, "Fran Benga", 15, "no"},
                 {56478912, "Miguel Paz", 21, "no"},
     };
+    ordenarPorAntiguedad(per, CANT_PERS);
     fwrite(&per, sizeof(Personal), CANT_PERS, pf);
     fclose(pf);
     return TODO_OK;
@@ -65,21 +66,37 @@ int alta_personal()
         return ERROR;
     }
     Personal newPer;
-    int dni;
     char nomap[25];
-    char baja[2]="no";
+    char baja[]="no";
     puts("Ingreso nuevo personal: \n");
-    puts("\nIngrese el DNI:");
+    puts("Ingrese el DNI:");
     scanf("%d", &newPer.DNI);
-    puts("\nIngrese el nombre y apellido: ");
-    gets(nomap); ///No se porque razon el gets no me deja ingresar nada, el profe me dijo que era algo de los punteros
+    puts("Ingrese el nombre y apellido: ");
+    fflush(stdin);
+    gets(nomap);
     mi_Strcpy(newPer.nomAp, nomap);
     newPer.antiguedad = 00;
     mi_Strcpy(newPer.baja, baja);
     printf("\n%d - %s - %d - %s\n", newPer.DNI, newPer.nomAp, newPer.antiguedad, newPer.baja);
-    fwrite(&newPer, sizeof(Personal), 1, pf); ///No funciona porque no me agarraba el de nombre y apellido
+    fwrite(&newPer, sizeof(Personal), 1, pf);
     fclose(pf);
     return TODO_OK;
+}
+
+void ordenarPorAntiguedad(Personal per[], int ce)
+{
+    for(int i=0; i<ce; i++)
+    {
+        for(int j=i+1; j<ce; j++)
+        {
+            if(per[i].antiguedad < per[j].antiguedad)
+            {
+                Personal aux = per[i];
+                per[i] = per[j];
+                per[j] = aux;
+            }
+        }
+    }
 }
 
 int tamanio_arch()
@@ -92,7 +109,7 @@ int tamanio_arch()
     }
     long int final;
     fseek(pf, 0L, SEEK_END);
-    final=ftell(pf);
+    final = ftell(pf);
     fclose(pf);
     return final;
 }
@@ -108,8 +125,8 @@ int consulta_pesonal()
     Personal per;
     int cantPersonalActivos = 0;
     int tamanio = tamanio_arch();
-    int cantRegistros = tamanio/(sizeof(Personal)*1);
-    char text[]="si";
+    int cantRegistros = tamanio/(sizeof(Personal));
+    char text[]="no";
     fread(&per, sizeof(Personal), 1, pf);
     while(!feof(pf))
     {
@@ -138,14 +155,14 @@ int convertir_archivo()
         fclose(pf);
         return ERROR;
     }
-    Personal per;
     puts("DNI | Nombre y Apellido | Antiguedad | Baja\n");
+    Personal per;
     fread(&per, sizeof(Personal), 1, pf);
     while(!feof(pf))
     {
-//        fprintf(pf, "%8d|%25s|%2d|%2d\n", per.DNI, per.nomAp, per.antiguedad, per.baja);
-//        printf("%d | %s | %d | %s\n", per.DNI, per.nomAp, per.antiguedad, per.baja);
-//        fread(&per, sizeof(Personal), 1, pf);
+        fprintf(sf, "%-8d|%-25s|%-2d|%c%c\n", per.DNI, per.nomAp, per.antiguedad, per.baja[0], per.baja[1]);
+        printf("%d | %s | %d | %c%c\n", per.DNI, per.nomAp, per.antiguedad, per.baja[0], per.baja[1]);
+        fread(&per, sizeof(Personal), 1, pf);
     }
     fclose(pf);
     fclose(sf);
@@ -192,7 +209,7 @@ int sumDiagonalSecundaria(int m[][COLS])
     int f, c, sum=0;
     for(f=0; f<COLS-1; f++)
     {
-        for(c=0; c<COLS-1; c++)
+        for(c=COLS-2-f; c >= 0; c--)
             sum += m[f][c];
     }
     return sum;
@@ -210,7 +227,6 @@ size_t mi_Strlen(char *s)
 int sonAnagramas(char *cad1, char *cad2)
 {
     int cant=0;
-    int band=0;
     int len = mi_Strlen(cad1);
     int len2 = mi_Strlen(cad2);
     char *inicio = cad1;
@@ -227,4 +243,5 @@ int sonAnagramas(char *cad1, char *cad2)
     }
     if(cant == len)
         return 1;
+    return 0;
 }

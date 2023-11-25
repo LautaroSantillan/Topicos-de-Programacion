@@ -6,17 +6,19 @@
 #define ERROR 1
 #define TODO_OK 0
 #define CANT_PERS 8
-#define COLS 2
-#define FIL 2
+#define COLS 3
+#define FIL 3
 typedef struct{
-    int DNI; /// 8
-    char nomAp[25]; /// 25
-    int antiguedad; /// 2
-    char baja[2]; /// 2
+    int DNI;
+    char nomAp[25];
+    int antiguedad;
+    char baja[2];
 }Personal;
 ///Ejercicio 1
 int generacion_archivo();
 int mostrarArch();
+void ordenarPorAntiguedad(Personal per[], int ce);
+int alta_personal();
 int consulta_pesonal();
 int tamanio_arch();
 int convertir_archivo();
